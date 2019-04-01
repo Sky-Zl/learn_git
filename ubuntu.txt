@@ -81,3 +81,6 @@
 		export XMODIFIERS="@im=fcitx"
 	重启qq，切换为系统自带的fcitx输入法即可输入中文。
 
+
+112233
+
