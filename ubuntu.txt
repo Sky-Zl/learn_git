@@ -1,0 +1,83 @@
+1.连接外网服务器
+	sudo sslocal -c /etc/shadowsocks.json -d start
+
+2.解决双系统时间不一致问题
+	在Ubuntu下关闭UTC
+	按Ctrl+Alt+T调出终端，输入：
+		sudo gedit /etc/default/rcS
+	找到UTC=yes这一行，改成UTC=no
+
+3.自动清理残余的依赖库
+	sudo apt-get autoclean --清理旧版本的软件缓存 (已经卸载掉的软件包)
+	sudo apt-get clean--清理所有软件缓存 (电脑上存储的安装包)
+	sudo apt-get autoremove--删除系统不再使用的孤立软件 
+
+4.ubuntu清理系统日志
+	sudo -i  
+	echo > /var/log/syslog
+	echo > /var/log/kern.log
+
+5.Ubuntu--解决文件安装出错问题
+	sudo rm -r /var/lib/apt/lists/*
+	sudo apt update
+
+6.文件默认为只读，修改权限
+	sudo chmod 777 run.sh 
+
+7.更改状态栏位置
+	底部：
+	gsettings set com.canonical.Unity.Launcher launcher-position Bottom
+
+	左边：
+	gsettings set com.canonical.Unity.Launcher launcher-position Left
+
+8.Ubuntu16.04显示内存CPU网速等（System Monitor）
+	sudo add-apt-repository ppa:fossfreedom/indicator-sysmonitor
+	sudo apt-get update
+	sudo apt-get install indicator-sysmonitor
+		在终端执行：
+	indicator-sysmonitor &
+		然后Ctrl+C实现后台运行indicator-sysmonitor
+	设置开机启动：鼠标右键点击标题栏上图标，弹出菜单，选择Run on startup
+
+9.Ubuntu创建桌面快捷方式
+	sudo gedit /usr/share/applications/XXX.desktop
+	将下面的内容粘贴到XXX.desktop 文件中：
+
+	[Desktop Entry]
+	Name=XXX
+	Exec=/home/.../bin/XXX.sh
+	Comment=IntelliJ IDEA
+	Icon=/home/.../bin/XXX.png
+	Type=Application
+	Terminal=false
+	Encoding=UTF-8
+
+	注意 将/home/.../这段路径换成自己的情况。
+	其中 Exec 就是平时用终端打开xxx的命令， Icon 是图标文件。
+
+	然后在终端执行：
+	sudo chmod +x /usr/share/applications/intellij-idea.desktop
+
+10.Ubuntu16.04下安装qq/tim、微信等windows应用并解决无法输入中文的问题
+	https://blog.csdn.net/m0_37469948/article/details/82950266
+	1).安装deepin-wine环境:
+		git clone https://gitee.com/wszqkzqk/deepin-wine-for-ubuntu.git
+		cd deepin-wine-for-ubuntu
+		./install.sh
+	2).下载并安装所需要的deepin-wine容器（建议在终端下使用dpkg -i安装容器，否则容易误报依赖错误）
+	   v或者直接双击.deb包打开软件中心进行安装（比较慢）
+	下载链接：http://mirrors.aliyun.com/deepin/pool/non-free/d/
+
+	3).会发现输入法无法输入中文的问题
+	解决方法：在运行脚本中export环境变量，加载输入法。具体如下：
+	打开终端cd 进入deepin-wine的运行脚本目录
+		cd /opt/deepinwine/tools/
+		sudo chmod 777 run.sh  #文件默认为只读，修改权限
+		vim run.sh   #编辑脚本
+	如图，加入以下内容：
+		export GTK_IM_MODULE="fcitx"
+		export QT_IM_MODULE="fcitx" 
+		export XMODIFIERS="@im=fcitx"
+	重启qq，切换为系统自带的fcitx输入法即可输入中文。
+
